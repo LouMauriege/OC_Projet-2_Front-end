@@ -3,5 +3,10 @@
 <p>{{ (olympics$ | async)?.length }} data loaded</p>
 
     @for (olympic of this.olympicsArray; track olympic.country) {
-        {{ olympic.country }}
+        <p>{{ olympic.country }}</p>
     }
+
+    <div class="chart-container">
+        <canvas  id="MyChart" >{{ chart }}</canvas>
+  </div>
+ 

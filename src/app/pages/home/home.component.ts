@@ -4,6 +4,8 @@ import { Observable, of } from 'rxjs';
 import { Olympics } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { BaseChartDirective } from 'ng2-charts';
+import { Chart } from 'chart.js/auto';
+import { Participations } from 'src/app/core/models/Participation';
 
 @Component({
   standalone: true,
@@ -15,12 +17,48 @@ import { BaseChartDirective } from 'ng2-charts';
 export class HomeComponent implements OnInit {
   public olympics$: Observable<Olympics[] | null> = of(null);
   public olympicsArray: Olympics[] | null = [];
+  public chart: any;
+  public countriesIds: Array<Number> = [];
+  public countriesNames: Array<String> = [];
+  public countriesParticipations: Array<Number> = [];
 
   constructor(private olympicService: OlympicService) {}
+
+  createChart(countriesNames: Array<String>, countriesParticipations: Array<Number>){
+  
+    this.chart = new Chart("MyChart", {
+      type: 'pie',
+    data: {
+      labels: countriesNames,
+      datasets: [{
+        label: '# of Votes',
+        data: countriesParticipations,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+    });
+  }
 
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
 
-    this.olympics$.subscribe(olympic => this.olympicsArray = olympic);
+    this.olympics$.subscribe(olympic => {
+      this.olympicsArray = olympic;
+      console.log(this.olympicsArray);
+      if (this.olympicsArray) {
+        this.countriesIds = this.olympicsArray?.map(({ id }) => id);
+        this.countriesNames = this.olympicsArray?.map(({ country }) => country);
+        this.countriesParticipations = this.olympicsArray?.map(({ participations }) => participations.length);
+        console.log(this.countriesIds, this.countriesNames, this.countriesParticipations);
+        this.createChart(this.countriesNames, this.countriesParticipations);
+      }
+    });
   }
 }
