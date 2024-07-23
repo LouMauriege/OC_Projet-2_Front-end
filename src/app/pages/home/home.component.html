@@ -6,10 +6,18 @@
 <p>{{ olympic.country }}</p>
 }
 
-<div class="chart-container">
-  <canvas id="MyChart">{{ chart }}</canvas>
-</div>
-
-<div class="charts">
-  <div class="pie"></div>
-</div>
+<ngx-charts-bar-vertical
+  [view]="view"
+  [scheme]="colorScheme"
+  [results]="obj"
+  [gradient]="gradient"
+  [xAxis]="showXAxis"
+  [yAxis]="showYAxis"
+  [legend]="showLegend"
+  [showXAxisLabel]="showXAxisLabel"
+  [showYAxisLabel]="showYAxisLabel"
+  [xAxisLabel]="xAxisLabel"
+  [yAxisLabel]="yAxisLabel"
+  (select)="onSelect($event)"
+>
+</ngx-charts-bar-vertical>
