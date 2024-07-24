@@ -1,17 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { Olympics } from 'src/app/core/models/Olympic';
 import { Participations } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
-
-import { BaseChartDirective } from 'ng2-charts';
-import { Chart } from 'chart.js/auto';
+import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
 
 @Component({
   standalone: true,
   selector: 'app-home',
-  imports: [BaseChartDirective, CommonModule],
+  imports: [CommonModule, NgxChartsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -24,29 +22,21 @@ export class HomeComponent implements OnInit {
   public participationsArray: Array<Array<Participations>> = [];
   public countryMedalsCount: Array<number> = [];
 
-  constructor(private olympicService: OlympicService) {}
+  // options
+  gradient: boolean = true;
+  showLegend: boolean = true;
+  showLabels: boolean = true;
+  isDoughnut: boolean = false;
 
-  createChart(countriesNames: Array<String>, countriesMedalsCount: Array<Number>){
-  
-    this.chart = new Chart("MyChart", {
-      type: 'pie',
-      data: {
-        labels: countriesNames,
-        datasets: [{
-          label: '# of Votes',
-          data: countriesMedalsCount,
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
-  }
+  @Input() view: any;
+
+  colorScheme: any = {
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+  };
+
+  single: any[] = [];
+
+  constructor(private olympicService: OlympicService) {}
 
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
@@ -64,8 +54,17 @@ export class HomeComponent implements OnInit {
           }
         }
 
-        this.createChart(this.countriesNames, this.countryMedalsCount);
+        for(let i = 0; i < this.countriesNames.length; i++) {
+          this.single[i] = {"name": this.countriesNames[i], "value": this.countryMedalsCount[i]};
+        }
+  
+        console.log(this.countriesNames.length, this.single);
+
       }
     });
+
+    // onSelect(event) {
+    //   console.log(event);
+    // }
   }
 }
