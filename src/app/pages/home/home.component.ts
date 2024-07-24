@@ -41,16 +41,12 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
 
-    // this.olympics$.subscribe(data => data?.forEach((item) => {
-    //   this.single.push({
-    //     name: (item.country), value: (item.participations.forEach((itemPraticipations) => itemPraticipations = itemPraticipations.medalsCount)
-    //   })
-    // }));
-    // console.log(this.single);
-
-
-
-    
+    this.olympics$.subscribe(data => data?.forEach((item) => {
+      this.single.push({
+        name: (item.country), value: (item.participations.forEach((itemPraticipations) => itemPraticipations = itemPraticipations.medalsCount))
+      })
+    }));
+    console.log(this.single);
     // this.single.map(data => console.log(data));
     // Object.assign(this, this.single);
 
