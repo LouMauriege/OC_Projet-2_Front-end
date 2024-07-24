@@ -41,27 +41,36 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
 
-    this.olympics$.subscribe(olympic => {
-      this.olympicsArray = olympic;
-      if (this.olympicsArray) {
-        this.countriesIds = this.olympicsArray?.map(({ id }) => id);
-        this.countriesNames = this.olympicsArray?.map(({ country }) => country);
-        this.participationsArray = this.olympicsArray?.map(({ participations }) => participations);
-        for (let i = 0; i < this.participationsArray.length; i++) {
-          this.countryMedalsCount[i] = 0;
-          for (let j = 0; j < this.participationsArray[i].length; j++) {
-            this.countryMedalsCount[i] += this.participationsArray[i][j].medalsCount;
-          }
-        }
+    this.olympics$.subscribe(data => data?.forEach((item) => {
+      this.single.push({
+        name: (item.country), value: (item.participations.forEach((itemPraticipations) => itemPraticipations = itemPraticipations.medalsCount))
+      })
+    }));
+    console.log(this.single);
+    // this.single.map(data => console.log(data));
+    // Object.assign(this, this.single);
 
-        for(let i = 0; i < this.countriesNames.length; i++) {
-          this.single[i] = {"name": this.countriesNames[i], "value": this.countryMedalsCount[i]};
-        }
+    // this.olympics$.subscribe(olympic => {
+    //   this.olympicsArray = olympic;
+    //   if (this.olympicsArray) {
+    //     this.countriesIds = this.olympicsArray?.map(({ id }) => id);
+    //     this.countriesNames = this.olympicsArray?.map(({ country }) => country);
+    //     this.participationsArray = this.olympicsArray?.map(({ participations }) => participations);
+    //     for (let i = 0; i < this.participationsArray.length; i++) {
+    //       this.countryMedalsCount[i] = 0;
+    //       for (let j = 0; j < this.participationsArray[i].length; j++) {
+    //         this.countryMedalsCount[i] += this.participationsArray[i][j].medalsCount;
+    //       }
+    //     }
+
+    //     for(let i = 0; i < this.countriesNames.length; i++) {
+    //       this.single[i] = {"name": this.countriesNames[i], "value": this.countryMedalsCount[i]};
+    //     }
   
-        console.log(this.countriesNames.length, this.single);
+    //     console.log(this.countriesNames.length, this.single);
 
-      }
-    });
+    //   }
+    // });
 
     // onSelect(event) {
     //   console.log(event);
