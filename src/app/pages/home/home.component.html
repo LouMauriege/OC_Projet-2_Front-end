@@ -1,8 +1,11 @@
-<ngx-charts-pie-chart
-  [view]="view"
+@if (observableDataReceived) {
+  <ngx-charts-pie-chart
+  [view]="[700, 400]"
   [scheme]="colorScheme"
   [results]="single"
   [labels]="showLabels"
   [doughnut]="isDoughnut"
->
-</ngx-charts-pie-chart>
+  (select)="onSelect($event)"
+  >
+  </ngx-charts-pie-chart>
+}

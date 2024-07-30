@@ -1,0 +1,16 @@
+<a routerLink="">back</a>
+@if (observableDataReceived) {
+  <ngx-charts-line-chart
+  [view]="[700, 400]"
+  [scheme]="colorScheme"
+  [showXAxisLabel]="showXAxisLabel"
+  [showYAxisLabel]="showYAxisLabel"
+  [xAxis]="xAxis"
+  [yAxis]="yAxis"
+  [xAxisLabel]="xAxisLabel"
+  [yAxisLabel]="yAxisLabel"
+  [timeline]="timeline"
+  [results]="multi"
+  >
+</ngx-charts-line-chart>
+}

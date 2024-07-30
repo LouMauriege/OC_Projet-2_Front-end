@@ -4,12 +4,14 @@ import { Observable, of } from 'rxjs';
 import { Olympics } from 'src/app/core/models/Olympic';
 import { Participations } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
-import { LegendPosition, NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { PageDetailComponent } from '../page-detail/page-detail.component';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-home',
-  imports: [CommonModule, NgxChartsModule],
+  imports: [CommonModule, NgxChartsModule, PageDetailComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -21,6 +23,8 @@ export class HomeComponent implements OnInit {
   public countriesNames: Array<string> = [];
   public participationsArray: Array<Array<Participations>> = [];
   public countryMedalsCount: Array<number> = [];
+
+  public observableDataReceived: boolean = false;
 
   // options
   gradient: boolean = true;
@@ -36,44 +40,31 @@ export class HomeComponent implements OnInit {
 
   single: any[] = [];
 
-  constructor(private olympicService: OlympicService) {}
+  constructor(private olympicService: OlympicService,
+              private router: Router) {}
+
+  getMedalsTotal(participations: Participations[]): number {
+    let medalsTotals: number = 0;
+    for(let i = 0; i < participations.length; i++) {
+      medalsTotals += participations[i].medalsCount;
+    }
+    return medalsTotals;
+  }
+
+  onSelect(data: HTMLInputElement): void {
+    this.router.navigateByUrl(`details/${data.name.replace(" ", "_")}`);
+  }
 
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
 
     this.olympics$.subscribe(data => data?.forEach((item) => {
       this.single.push({
-        name: (item.country), value: (item.participations.forEach((itemPraticipations) => itemPraticipations = itemPraticipations.medalsCount))
-      })
+        name: (item.country),
+        value: (this.getMedalsTotal(item.participations))
+      });
+      this.observableDataReceived = true;
     }));
-    console.log(this.single);
-    // this.single.map(data => console.log(data));
-    // Object.assign(this, this.single);
 
-    // this.olympics$.subscribe(olympic => {
-    //   this.olympicsArray = olympic;
-    //   if (this.olympicsArray) {
-    //     this.countriesIds = this.olympicsArray?.map(({ id }) => id);
-    //     this.countriesNames = this.olympicsArray?.map(({ country }) => country);
-    //     this.participationsArray = this.olympicsArray?.map(({ participations }) => participations);
-    //     for (let i = 0; i < this.participationsArray.length; i++) {
-    //       this.countryMedalsCount[i] = 0;
-    //       for (let j = 0; j < this.participationsArray[i].length; j++) {
-    //         this.countryMedalsCount[i] += this.participationsArray[i][j].medalsCount;
-    //       }
-    //     }
-
-    //     for(let i = 0; i < this.countriesNames.length; i++) {
-    //       this.single[i] = {"name": this.countriesNames[i], "value": this.countryMedalsCount[i]};
-    //     }
-  
-    //     console.log(this.countriesNames.length, this.single);
-
-    //   }
-    // });
-
-    // onSelect(event) {
-    //   console.log(event);
-    // }
   }
 }
