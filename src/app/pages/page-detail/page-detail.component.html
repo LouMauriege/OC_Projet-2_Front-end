@@ -1,6 +1,22 @@
 <a routerLink="">back</a>
+<h1>{{ countryName }}</h1>
+
+<div>
+  <h2>Number of entries</h2>
+  <p>{{ numberOfEntries }}</p>
+</div>
+
+<div>
+  <h2>Total number of medals</h2>
+  <p>{{ totalNumberOfMedals }}</p>
+</div>
+
+<div>
+  <h2>Total number of athletes</h2>
+  <p>{{ totalNumberOfAthletes }}</p>
+</div>
 @if (observableDataReceived) {
-  <ngx-charts-line-chart
+<ngx-charts-line-chart
   [view]="[700, 400]"
   [scheme]="colorScheme"
   [showXAxisLabel]="showXAxisLabel"
@@ -11,6 +27,6 @@
   [yAxisLabel]="yAxisLabel"
   [timeline]="timeline"
   [results]="multi"
-  >
+>
 </ngx-charts-line-chart>
 }

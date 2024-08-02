@@ -1,11 +1,22 @@
+<h1>Medals per Country</h1>
+
+<div>
+  <h2>Number of JOs</h2>
+  <p>{{ numberOfJO }}</p>
+</div>
+
+<div>
+  <h2>Number of countries</h2>
+  <p>{{ numberOfCountries }}</p>
+</div>
+
 @if (observableDataReceived) {
-  <ngx-charts-pie-chart
+<ngx-charts-pie-chart
   [view]="[700, 400]"
   [scheme]="colorScheme"
-  [results]="single"
+  [results]="dataArrayForChart"
   [labels]="showLabels"
-  [doughnut]="isDoughnut"
   (select)="onSelect($event)"
-  >
-  </ngx-charts-pie-chart>
+>
+</ngx-charts-pie-chart>
 }

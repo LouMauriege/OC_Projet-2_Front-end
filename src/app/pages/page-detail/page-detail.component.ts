@@ -19,6 +19,9 @@ export class PageDetailComponent implements OnInit{
   public observableDataReceived: boolean = false;
   public countryName: string = "";
   public medalsPerYear: any[] = [];
+  public numberOfEntries: number = 0;
+  public totalNumberOfAthletes: number = 0;
+  public totalNumberOfMedals: number = 0;
 
   multi: any[] = [];
   // options
@@ -44,23 +47,25 @@ export class PageDetailComponent implements OnInit{
     if(arg1.country === this.countryName) {
       arg1.participations.forEach((item) => {
         this.medalsPerYear.push({
-          name: item.city,
+          name: String(item.year),
           value: item.medalsCount,
         });
+        this.totalNumberOfMedals += item.medalsCount;
+        this.totalNumberOfAthletes += item.athleteCount;
+        this.numberOfEntries++;
       });
-      //console.log(this.medalsPerYear);
     }
     return this.medalsPerYear;
   }
 
   ngOnInit(): void {
-    this.countryName = this.route.snapshot.params['country'];
-    this.countryName = this.countryName.replace("_", " ");
+    this.countryName = this.route.snapshot.params['country'].replace("_", " ");
 
     this.olympics$ = this.olympicService.getOlympics();
 
     this.olympics$.subscribe(data => data?.forEach((item) => {
       console.log(item.country);
+      console.log(item.participations);
       console.log(this.countryName);
       if (item.country === this.countryName) {
         this.multi.push({
@@ -71,35 +76,5 @@ export class PageDetailComponent implements OnInit{
       this.observableDataReceived = true;
       console.log(this.multi);
     }));
-
-
-    // this.olympics$.subscribe(data => data?.forEach((item) => {
-    //   this.multi.push({
-    //     name: (item.country),
-    //     series: (this.getMedalsDetail(item))
-    //   });
-    //   this.observableDataReceived = true;
-    //   console.log(this.multi);
-    // }));
-
-      // this.multi = [
-      //   {
-      //     "name": "Germany",
-      //     "series": [
-      //       {
-      //         "name": "1990",
-      //         "value": 62000000
-      //       },
-      //       {
-      //         "name": "2010",
-      //         "value": 73000000
-      //       },
-      //       {
-      //         "name": "2011",
-      //         "value": 89400000
-      //       }
-      //     ]
-      //   }
-      // ];
-    }
+  }
 }

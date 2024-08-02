@@ -1,48 +1,51 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
+import { Router } from '@angular/router';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { Olympics } from 'src/app/core/models/Olympic';
 import { Participations } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { PageDetailComponent } from '../page-detail/page-detail.component';
-import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-home',
-  imports: [CommonModule, NgxChartsModule, PageDetailComponent],
+  imports: [CommonModule, NgxChartsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
-  public olympics$: Observable<Olympics[] | null> = of(null);
-  public olympicsArray: Olympics[] | null = [];
-  public chart: any;
-  public countriesIds: Array<number> = [];
-  public countriesNames: Array<string> = [];
-  public participationsArray: Array<Array<Participations>> = [];
-  public countryMedalsCount: Array<number> = [];
 
+export class HomeComponent implements OnInit {
+  // Observable to get data from database
+  public olympics$: Observable<Olympics[] | null> = of(null);
+
+  // Get and format data for Ngx-Charts
+  public dataArrayForChart: any[] = [];
+
+  // Get data for details elements
+  public numberOfJO: number = 0;
+  public numberOfCountries: number = 0;
+
+  // Boolean to know when the data arrives from the observable
   public observableDataReceived: boolean = false;
 
-  // options
+  // Options to setup the chart (Ngx-Charts Library)
   gradient: boolean = true;
   showLegend: boolean = true;
   showLabels: boolean = true;
-  isDoughnut: boolean = false;
-
-  @Input() view: any;
-
   colorScheme: any = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+    domain: ['#6e4152', '#90a2d6', '#92829f', '#c8e0ef', '#8a6266']
   };
-
-  single: any[] = [];
 
   constructor(private olympicService: OlympicService,
               private router: Router) {}
 
+  /**
+  * Returns total of medals.
+  *
+  * @param {Participations[]} participations an array of all participations.
+  * @return {number} medalsTotals the total of medals from all participations.
+  */
   getMedalsTotal(participations: Participations[]): number {
     let medalsTotals: number = 0;
     for(let i = 0; i < participations.length; i++) {
@@ -51,7 +54,18 @@ export class HomeComponent implements OnInit {
     return medalsTotals;
   }
 
+  tooltipFormatter(tooltipValue: Object): string {
+    console.log(tooltipValue);
+    return `${tooltipValue}`;
+  }
+
+  /**
+  * Navigate to the details page.
+  *
+  * @param {HTMLInputElement} data the name of the country.
+  */
   onSelect(data: HTMLInputElement): void {
+    // Get the name of the country and replace all spaces with underscores
     this.router.navigateByUrl(`details/${data.name.replace(" ", "_")}`);
   }
 
@@ -59,10 +73,14 @@ export class HomeComponent implements OnInit {
     this.olympics$ = this.olympicService.getOlympics();
 
     this.olympics$.subscribe(data => data?.forEach((item) => {
-      this.single.push({
+      this.dataArrayForChart.push({
         name: (item.country),
         value: (this.getMedalsTotal(item.participations))
       });
+      if (item.participations.length > this.numberOfJO) {
+        this.numberOfJO = item.participations.length;
+      }
+      this.numberOfCountries++;
       this.observableDataReceived = true;
     }));
 
