@@ -1,32 +1,38 @@
-<a routerLink="">back</a>
-<h1>{{ countryName }}</h1>
+<a routerLink="">< Retour à la page d'accueil</a>
 
-<div>
-  <h2>Number of entries</h2>
-  <p>{{ numberOfEntries }}</p>
-</div>
+<div class="detail-component">
+  <div class="text-content">
+    <h1>{{ countryName }}</h1>
 
-<div>
-  <h2>Total number of medals</h2>
-  <p>{{ totalNumberOfMedals }}</p>
-</div>
+    <div class="text-content__values-group">
+      <div>
+        <h2>Number of entries</h2>
+        <p>{{ numberOfEntries }}</p>
+      </div>
+      <div>
+        <h2>Total number of medals</h2>
+        <p>{{ totalNumberOfMedals }}</p>
+      </div>
+      <div>
+        <h2>Total number of athletes</h2>
+        <p>{{ totalNumberOfAthletes }}</p>
+      </div>
+    </div>
+  </div>
 
-<div>
-  <h2>Total number of athletes</h2>
-  <p>{{ totalNumberOfAthletes }}</p>
+  @if (observableDataReceived) {
+  <ngx-charts-line-chart
+    [view]="[700, 400]"
+    [scheme]="colorScheme"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxis]="xAxis"
+    [yAxis]="yAxis"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [timeline]="timeline"
+    [results]="dataObjectForChart"
+  >
+  </ngx-charts-line-chart>
+  }
 </div>
-@if (observableDataReceived) {
-<ngx-charts-line-chart
-  [view]="[700, 400]"
-  [scheme]="colorScheme"
-  [showXAxisLabel]="showXAxisLabel"
-  [showYAxisLabel]="showYAxisLabel"
-  [xAxis]="xAxis"
-  [yAxis]="yAxis"
-  [xAxisLabel]="xAxisLabel"
-  [yAxisLabel]="yAxisLabel"
-  [timeline]="timeline"
-  [results]="multi"
->
-</ngx-charts-line-chart>
-}

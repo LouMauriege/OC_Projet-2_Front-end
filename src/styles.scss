@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+$base-color: #04838f;
+
+html {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-size: 16px;
+}
+
+/* Style the tooltip */
+ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip {
+  background-color: $base-color;
+
+  .tooltip-caret.position-top {
+    border-top-color: $base-color;
+  }
+  
+  .tooltip-caret.position-right {
+    border-right-color: $base-color;
+  }
+}
+
+.pie-label {
+  font-size: 1rem;
+}

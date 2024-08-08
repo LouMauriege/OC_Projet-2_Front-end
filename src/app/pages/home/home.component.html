@@ -1,22 +1,33 @@
-<h1>Medals per Country</h1>
+<div class="home-component">
+  <div class="text-content">
+    <h1>Medals per Country</h1>
 
-<div>
-  <h2>Number of JOs</h2>
-  <p>{{ numberOfJO }}</p>
+    <div class="text-content__values-group">
+      <div>
+        <h2>Number of JOs</h2>
+        <p>{{ numberOfJO }}</p>
+      </div>
+      <div>
+        <h2>Number of countries</h2>
+        <p>{{ (olympics$ | async)?.length }}</p>
+      </div>
+    </div>
+  </div>
+
+  @if (observableDataReceived) {
+  <ngx-charts-pie-chart
+    [view]="[700, 400]"
+    [scheme]="colorScheme"
+    [results]="dataObjectForChart"
+    [labels]="showLabels"
+    (select)="onSelect($event)"
+  >
+    <ng-template #tooltipTemplate let-model="model">
+      <div class="tooltip">
+        <h4 class="tooltip__country">{{ model.name }}</h4>
+        <p class="tooltip__value">🎖️{{ model.value }}</p>
+      </div>
+    </ng-template>
+  </ngx-charts-pie-chart>
+  }
 </div>
-
-<div>
-  <h2>Number of countries</h2>
-  <p>{{ numberOfCountries }}</p>
-</div>
-
-@if (observableDataReceived) {
-<ngx-charts-pie-chart
-  [view]="[700, 400]"
-  [scheme]="colorScheme"
-  [results]="dataArrayForChart"
-  [labels]="showLabels"
-  (select)="onSelect($event)"
->
-</ngx-charts-pie-chart>
-}

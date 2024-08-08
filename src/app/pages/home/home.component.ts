@@ -1,30 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Observable, of } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Olympics } from 'src/app/core/models/Olympic';
 import { Participations } from 'src/app/core/models/Participation';
-import { OlympicService } from 'src/app/core/services/olympic.service';
+
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @Component({
   standalone: true,
   selector: 'app-home',
-  imports: [CommonModule, NgxChartsModule],
+  imports: [NgxChartsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
 
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   // Observable to get data from database
-  public olympics$: Observable<Olympics[] | null> = of(null);
+  public olympics$!: Observable<Olympics[]>;
+
+  // Subject to destroy the olympics$ observable
+  private destroy$!: Subject<boolean>;
 
   // Get and format data for Ngx-Charts
-  public dataArrayForChart: any[] = [];
+  public dataObjectForChart: Object[] = [];
 
   // Get data for details elements
   public numberOfJO: number = 0;
-  public numberOfCountries: number = 0;
 
   // Boolean to know when the data arrives from the observable
   public observableDataReceived: boolean = false;
@@ -54,9 +58,13 @@ export class HomeComponent implements OnInit {
     return medalsTotals;
   }
 
-  tooltipFormatter(tooltipValue: Object): string {
-    console.log(tooltipValue);
-    return `${tooltipValue}`;
+  tooltipFormatter(tooltipValue: any): string {
+    console.log(tooltipValue.data.name, tooltipValue.data.value);
+    const returnToLine: string = "\n"
+    return `
+    <p>${tooltipValue.data.name}</p>
+    <p>${tooltipValue.data.value}</p>
+    `;
   }
 
   /**
@@ -70,19 +78,31 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Create instance of detroy$ as Subject
+    this.destroy$ = new Subject<boolean>();
+
     this.olympics$ = this.olympicService.getOlympics();
 
-    this.olympics$.subscribe(data => data?.forEach((item) => {
-      this.dataArrayForChart.push({
+    // Subscribe to olympics$ observable
+    this.olympics$.pipe(
+      // Listen observable until destroy$ is fired
+      takeUntil(this.destroy$)
+      // Map data to build the chart
+    ).subscribe(data => data?.forEach((item) => {
+      this.dataObjectForChart.push({
         name: (item.country),
         value: (this.getMedalsTotal(item.participations))
       });
       if (item.participations.length > this.numberOfJO) {
         this.numberOfJO = item.participations.length;
       }
-      this.numberOfCountries++;
       this.observableDataReceived = true;
+      error: (error: Error) => console.log(error); 
     }));
+  }
 
+  ngOnDestroy(): void {
+    // Fire destroy$ when component destroy 
+    this.destroy$.next(true);
   }
 }
