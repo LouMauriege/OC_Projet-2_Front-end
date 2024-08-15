@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, map } from 'rxjs';
+import { catchError, finalize, tap } from 'rxjs/operators';
 import { Olympics } from '../models/Olympic';
 
 @Injectable({
@@ -24,5 +24,17 @@ export class OlympicService {
 
   getOlympics(): Observable<Olympics[]> {
     return this.olympics$.asObservable();
+  }
+
+  loadCountryByName(countryName: string) {
+    return this.http.get<Olympics[]>(this.olympicUrl).pipe(
+      map((data) => {
+        let result: Olympics[] = data.filter((item) => item.country === countryName);
+        if (result.length == 0) {
+          throw new Error("counrty does not exist");
+        }
+        return result[0];
+      })
+    );
   }
 }

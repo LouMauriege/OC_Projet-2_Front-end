@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil, map } from 'rxjs/operators';
 
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Olympics } from 'src/app/core/models/Olympic';
 
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { Color, NgxChartsModule } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-page-detail',
@@ -17,7 +17,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 })
 export class PageDetailComponent implements OnInit, OnDestroy {
   // Observable to get data from database
-  public olympics$!: Observable<Olympics[]>;
+  public olympics$!: Observable<Olympics>;
 
   // Subject to destroy the olympics$ observable
   private destroy$!: Subject<boolean>;
@@ -30,7 +30,7 @@ export class PageDetailComponent implements OnInit, OnDestroy {
 
   // Get data for details elements
   public countryName: string = "";
-  public medalsPerYear: any[] = [];
+  public medalsPerYear: { name: string, value: number }[] = [];
   public numberOfEntries: number = 0;
   public totalNumberOfMedals: number = 0;
   public totalNumberOfAthletes: number = 0;
@@ -48,7 +48,8 @@ export class PageDetailComponent implements OnInit, OnDestroy {
   };
 
   constructor(private olympicService: OlympicService,
-              private route: ActivatedRoute) {}
+              private route: ActivatedRoute,
+              private router: Router) {}
 
   /**
   * Returns total of medals per years.
@@ -78,27 +79,26 @@ export class PageDetailComponent implements OnInit, OnDestroy {
     // Get the name of the country selected via the URL
     this.countryName = this.route.snapshot.params['country'].replace("_", " ");
 
-    this.olympics$ = this.olympicService.getOlympics();
+    this.olympics$ = this.olympicService.loadCountryByName(this.countryName);
 
     // Subscribe to olympics$ observable
     this.olympics$.pipe(
       // Listen observable until destroy$ is fired
       takeUntil(this.destroy$)
       // Map data to build the chart
-    ).subscribe(data => data?.forEach((item) => {
-      console.log(item.country);
-      console.log(item.participations);
-      console.log(this.countryName);
-      if (item.country === this.countryName) {
-        this.dataObjectForChart.push({
-          name: (item.country),
-          series: (this.getMedalsDetail(item))
-        });
-      }
+    ).subscribe(data => {
+      console.log(data);
+      this.dataObjectForChart.push({
+        name: (data.country),
+        series: (this.getMedalsDetail(data))
+      });
       this.observableDataReceived = true;
-      console.log(this.dataObjectForChart);
-      error: (error: Error) => console.log(error); 
-    }));
+    },
+    (error: Error) => {
+      console.log(error);
+      this.router.navigateByUrl("data-not-found");
+    }
+  );
   }
 
   ngOnDestroy(): void {

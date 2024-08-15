@@ -42,7 +42,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   };
 
   constructor(private olympicService: OlympicService,
-              private router: Router) {}
+              private router: Router) {
+							}
 
   /**
   * Returns total of medals.
