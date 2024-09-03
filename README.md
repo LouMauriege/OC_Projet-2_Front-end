@@ -1,29 +1,62 @@
-# OlympicGamesStarter
+# Téléscore by Télésport
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
+## Description
 
-Don't forget to install your node_modules before starting (`npm install`).
+**Téléscore** is an Angular-based web application that provides statistics about the Olympic Games. The application allows users to explore the number of medals won by different countries during the Olympic Games.
 
-## Development server
+## Installation
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+### Clone the repository
 
-## Build
+```bash
+git clone https://github.com/LouMauriege/OC_Projet-2_Front-end.git
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Install dependencies
 
-## Where to start
+Navigate to the project's root directory (`OC_Projet-2_Front-end`) and install the required dependencies using npm:
+```bash
+cd OC_Projet-2_Front-end
+npm install
+```
+### Build the app
 
-As you can see, an architecture has already been defined for the project. It is just a suggestion, you can choose to use your own. The predefined architecture includes (in addition to the default angular architecture) the following:
+There is two ways to build the app, you can:
+1. [Run the app in devlopment mode](##Running-the-application-in-dev-mode "Go to the dev mode section")
+2. [Or build & run it locally.](##Running-the-build-locally "Go to the run locally section")
 
-- `components` folder: contains every reusable components
-- `pages` folder: contains components used for routing
-- `core` folder: contains the business logic (`services` and `models` folders)
+## Running the application in dev mode
 
-I suggest you to start by understanding this starter code. Pay an extra attention to the `app-routing.module.ts` and the `olympic.service.ts`.
+### Development Server
 
-Once mastered, you should continue by creating the typescript interfaces inside the `models` folder. As you can see I already created two files corresponding to the data included inside the `olympic.json`. With your interfaces, improve the code by replacing every `any` by the corresponding interface.
+Navigate to the project's root directory (`OC_Projet-2_Front-end/`) and start the server using npm:
+```bash
+cd OC_Projet-2_Front-end
+ng serve
+```
+In your web browser, navigate to [`http://localhost:4200/`](http://localhost:4200/). The application will automatically reload if you change any of the source files.
 
-You're now ready to implement the requested features.
+## Running the build locally
 
-Good luck!
+### Build the project
+
+Navigate to the project's root directory (`OC_Projet-2_Front-end/`) and build the project:
+```bash
+cd OC_Projet-2_Front-end
+ng build
+```
+
+### Start the server locally
+
+Navigate to the project's build output directory (`OC_Projet-2_Front-end/dist/`) and start the server using npm:
+```bash
+cd OC_Projet-2_Front-end/dist
+ng serve
+```
+
+## Versions
+
+This app was build within this environment:
+-   Node.js v20.17.0
+-   Angular CLI 18.0.5
+-   npm v10.3.0
