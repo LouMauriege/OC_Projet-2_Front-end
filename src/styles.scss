@@ -23,3 +23,31 @@ ngx-tooltip-content.ngx-charts-tooltip-content.type-tooltip {
 .pie-label {
   font-size: 1rem;
 }
+
+/* Medium devices (Desktops, tablets in landscape mode) */
+@media (max-width: 1200px) {
+  body {
+    font-size: 15px;
+}
+}
+
+/* Small devices (Tablets in portrait mode) */
+@media (max-width: 992px) {
+  body {
+    font-size: 14px;
+}
+}
+
+/* Extra small devices (Small tablets and large phones) */
+@media (max-width: 768px) {
+  body {
+    font-size: 13px;
+}
+}
+
+/* Very small devices (Mobile phones) */
+@media (max-width: 576px) {
+  body {
+    font-size: 12px;
+}
+}

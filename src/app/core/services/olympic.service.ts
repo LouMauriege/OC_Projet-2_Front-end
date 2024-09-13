@@ -31,7 +31,7 @@ export class OlympicService {
       map((data) => {
         let result: Olympics[] = data.filter((item) => item.country === countryName);
         if (result.length == 0) {
-          throw new Error("counrty does not exist");
+          throw new Error("country does not exist");
         }
         return result[0];
       })

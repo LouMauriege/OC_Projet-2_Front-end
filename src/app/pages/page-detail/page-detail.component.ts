@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { finalize, takeUntil, map } from 'rxjs/operators';
@@ -27,6 +27,8 @@ export class PageDetailComponent implements OnInit, OnDestroy {
 
   // Get and format data for Ngx-Charts
   public dataObjectForChart: Object[] = [];
+
+  public windowWidth!: number;
 
   // Get data for details elements
   public countryName: string = "";
@@ -72,7 +74,17 @@ export class PageDetailComponent implements OnInit, OnDestroy {
     return this.medalsPerYear;
   }
 
+  @HostListener('window:resize')
+  onResize() {
+    this.getWindowWidth();
+  }
+
+  getWindowWidth() {
+    this.windowWidth = window.innerWidth - 20;
+  }
+
   ngOnInit(): void {
+    this.getWindowWidth();
     // Create instance of detroy$ as Subject
     this.destroy$ = new Subject<boolean>();
 

@@ -74,3 +74,13 @@
 ngx-charts-pie-chart{
     margin: auto;
 }
+
+@media (max-width: 1200px) {
+    .home-component {
+        .text-content {
+            h1 {
+                width: auto;
+            }
+        }
+    }
+  }

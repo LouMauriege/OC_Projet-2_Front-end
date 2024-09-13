@@ -16,7 +16,7 @@
 
   @if (observableDataReceived) {
   <ngx-charts-pie-chart
-    [view]="[700, 400]"
+    [view]="[windowWidth, 400]"
     [scheme]="colorScheme"
     [results]="dataObjectForChart"
     [labels]="showLabels"

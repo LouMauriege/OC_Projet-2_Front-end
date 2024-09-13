@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -32,6 +32,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // Boolean to know when the data arrives from the observable
   public observableDataReceived: boolean = false;
+
+  public windowWidth!: number;
 
   // Options to setup the chart (Ngx-Charts Library)
   gradient: boolean = true;
@@ -78,7 +80,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl(`details/${data.name.replace(" ", "_")}`);
   }
 
+  @HostListener('window:resize')
+  onResize() {
+    this.getWindowWidth();
+  }
+
+  getWindowWidth() {
+    this.windowWidth = window.innerWidth - 20;
+  }
+
   ngOnInit(): void {
+    this.getWindowWidth();
     // Create instance of detroy$ as Subject
     this.destroy$ = new Subject<boolean>();
 
